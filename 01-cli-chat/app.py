@@ -1,31 +1,43 @@
 import os
-
 from dotenv import load_dotenv
-from openai import OpenAI
+from groq import Groq
 
 load_dotenv()
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
+MODEL_NAME = "llama-3.3-70b-versatile"
+SYSTEM_PROMPT = (
+    "You are a helpful assistant who explains technical topics clearly."
 )
+api_key = os.getenv("GROQ_API_KEY")
 
-question = input("You: ")
+if not api_key:
+    raise RuntimeError("GROQ_API_KEY not found."
+client = Groq( api_key=api_key)
 
-response = client.chat.completions.create(
-    model="gpt-4.1-mini",  # Replace with the model you have access to
-    messages=[
-        {
-            "role": "system",
-            "content": (
-                "You are a helpful assistant who explains technical topics clearly."
-            ),
-        },
-        {
-            "role": "user",
-            "content": question,
-        },
-    ],
-)
+while True:
+    user_input = input("You: ").strip()
+    if user_input.lower() == "exit":
+            print("🤖 Bot: Goodbye! Have a great day! 👋")
+            break
+    if not user_input:
+     continue
 
-print("\nAI:\n")
-print(response.choices[0].message.content)
+    try:
+        response = client.chat.completions.create(
+            model = MODEL_NAME,
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT
+                },
+                {
+                    "role": "user",
+                    "content": user_input
+                }
+            ]
+        )
+
+        print("\nAI:\n")
+        print(response.choices[0].message.content)
+    except Exception as e:
+        print(e)
