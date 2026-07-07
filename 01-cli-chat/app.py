@@ -26,10 +26,9 @@ while True:
     )
 
     try:
-        reply = ask_ai(messages)
-
         print("\nAI:\n")
-        print(reply)
+
+        reply = ask_ai(messages)
 
         messages.append(
             {
