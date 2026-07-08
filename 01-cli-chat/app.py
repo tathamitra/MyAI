@@ -1,15 +1,46 @@
 from ai_client import ask_ai
-from prompts import SYSTEM_PROMPT
+from prompts import PROMPTS
+
+
+print("=" * 40)
+print("Choose your AI Assistant")
+print("=" * 40)
+
+for key, value in PROMPTS.items():
+    print(f"{key}. {value['name']}")
+
+choice = input("\nChoice: ")
+
+system_prompt = PROMPTS.get(choice)
+
+if not system_prompt:
+    print("Invalid choice.")
+    exit()
 
 messages = [
     {
         "role": "system",
-        "content": SYSTEM_PROMPT
+        "content": system_prompt["prompt"]
     }
 ]
 
 while True:
-    user_input = input("You: ").strip()
+    # Get user input .Multiple lines can be entered, finish with END on a new line
+    print("You (finish with END on a new line):")
+
+    lines = []
+
+    while True:
+        line = input()
+
+        if line.strip() == "END":
+            break
+
+        lines.append(line)
+
+    user_input = "\n".join(lines).strip()
+
+    # Check for exit command
 
     if user_input.lower() == "exit":
         print("🤖 Goodbye!")
