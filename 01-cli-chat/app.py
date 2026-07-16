@@ -1,4 +1,5 @@
 from ai_client import ask_ai
+from document_reader import read_document
 from prompts import PROMPTS
 
 
@@ -17,12 +18,35 @@ if not system_prompt:
     print("Invalid choice.")
     exit()
 
+if choice == "6":
+    document_path = input("\nEnter document path: ").strip()
+
+    try:
+        document = read_document(document_path)
+
+    except Exception as e:
+        print(f"Error reading document: {e}")
+        exit()
+
 messages = [
     {
         "role": "system",
         "content": system_prompt["prompt"]
     }
 ]
+if choice == "6":
+    messages.append(
+        {
+            "role": "user",
+            "content": f"""
+You will answer questions ONLY using the following document.
+
+Document:
+
+{document}
+"""
+        }
+    )
 
 while True:
     # Get user input .Multiple lines can be entered, finish with END on a new line
