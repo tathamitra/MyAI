@@ -1,17 +1,18 @@
-def chunk_text(text, chunk_size=500):
+def chunk_text(text, chunk_size=100, overlap_words=10):
     words = text.split()
     chunks = []
+    start = 0
 
-    current_chunk = ""
+    while start < len(words):
+        # Calculate the end index for the current chunk, ensuring it does not exceed the total number of words
+        end = min(start + chunk_size, len(words))
 
-    for word in words:
-        if len(current_chunk) + len(word) + 1 <= chunk_size:
-            current_chunk += word + " "
-        else:
-            chunks.append(current_chunk.strip())
-            current_chunk = word + " "
+        chunk = words[start:end]
+        chunks.append(" ".join(chunk))
 
-    if current_chunk:
-        chunks.append(current_chunk.strip())
+        if end == len(words):
+            break
+
+        start = end - overlap_words
 
     return chunks

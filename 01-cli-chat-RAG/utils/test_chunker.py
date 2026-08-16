@@ -1,19 +1,12 @@
 from utils.chunker import chunk_text
 
-text = """
-Docker is a container platform.
+text = "A B C D E F G H I J K L"
 
-Docker images are blueprints for containers.
-
-Containers are running instances of images.
-
-Volumes persist data.
-
-Networks allow containers to communicate.
-"""
-
-chunks = chunk_text(text, chunk_size=50)
+chunks = chunk_text(
+    text,
+    chunk_size=10,
+    overlap_words=3
+)
 
 for i, chunk in enumerate(chunks):
-    print(f"\n--- CHUNK {i + 1} ---")
-    print(chunk)
+    print(f"CHUNK {i + 1}: {chunk}")
