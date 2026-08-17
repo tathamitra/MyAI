@@ -67,3 +67,9 @@ See [`ai_client.py` lines 11–15](ai_client.py#L11-L15):
 See [`ai_client.py` lines 18–23](ai_client.py#L18-L23):
 
 Each chunk's text is printed immediately with `flush=True`, creating the live "typing" effect, while also being appended to `full_response`.
+
+
+
+## DAY 8
+
+Learned how to convert document chunks and user questions into embedding vectors using all-MiniLM-L6-v2. Used cosine similarity to compare the question vector against chunk vectors and implemented Top-K retrieval to select the most similar chunks.
