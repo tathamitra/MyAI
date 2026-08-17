@@ -12,3 +12,7 @@ if not GROQ_API_KEY:
     raise RuntimeError("GROQ_API_KEY not found.")
 
 MODEL_NAME = "llama-3.3-70b-versatile"
+
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+EMBEDDING_MODEL = "text-embedding-3-small"
