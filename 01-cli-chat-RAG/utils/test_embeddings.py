@@ -4,8 +4,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
+# Creates embedding.
+# Every embedding is a vector, but not every vector is an embedding. An embedding is a vector with meaning baked in.
+# The word "embedding" refers to the fact that the text is "embedded" (placed) into a numeric space where similar meanings sit close together
+
 def create_embedding(text):
-    return model.encode(text)
+    return model.encode(text) # .encode(text) is the method that turns text into numbers.
 
 
 texts = [

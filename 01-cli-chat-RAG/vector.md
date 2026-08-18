@@ -65,3 +65,40 @@ question embedding
 similarity
  ↓
 top matching chunk
+
+## Definition
+A vector index is a data structure that makes finding similar vectors efficient.
+
+A vector database is a system that stores vectors and usually provides:
+
+similarity search
+metadata
+persistence
+filtering
+APIs
+indexing
+
+# Sentence Transformers → creates embeddings
+'''from sentence_transformers import SentenceTransformer
+model = SentenceTransformer("all-MiniLM-L6-v2")
+embedding = model.encode("Docker volumes persist data.")'''
+This is the model that turns text → meaning-numbers (embeddings).
+Input: a sentence/chunk of text.
+Output: a vector (384 numbers for MiniLM).
+Its only job: understand language and represent meaning numerically. It does not store or search anything.
+
+# NumPy → holds/manipulates the numerical vectors
+'''
+import numpy as np
+vectors = np.array(embeddings)   # shape: (num_chunks, 384)
+'''
+NumPy is the container and math engine for those vectors.
+Its only job: efficiently store and manipulate arrays of numbers. It doesn't understand text, and for large data its search is brute-force (slow).
+# FAISS → indexes/searches those vectors
+import faiss
+index = faiss.IndexFlatL2(384)   # build an index for 384-dim vectors
+index.add(vectors)               # store all chunk vectors
+distances, ids = index.search(question_vector, k=3)  # find 3 nearest
+FAISS (Facebook AI Similarity Search) is built for fast similarity search over many vectors.
+It builds a special index data structure so it can find the nearest vectors without comparing against every single one (which is what plain NumPy would do).
+Its only job: given a query vector, quickly return the most similar stored vectors.
