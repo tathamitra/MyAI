@@ -28,6 +28,8 @@ index.add(np.array(embeddings).astype("float32"))
 
 print("Number of vectors in index:", index.ntotal)
 
+
+# save the index to a file in other words  here we are persisting the index to a file so that we can load it later and use it for searching
 faiss.write_index(index, "docker.index")
 
 print("FAISS index saved.")

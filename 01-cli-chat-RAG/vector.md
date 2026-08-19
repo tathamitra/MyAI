@@ -102,3 +102,70 @@ distances, ids = index.search(question_vector, k=3)  # find 3 nearest
 FAISS (Facebook AI Similarity Search) is built for fast similarity search over many vectors.
 It builds a special index data structure so it can find the nearest vectors without comparing against every single one (which is what plain NumPy would do).
 Its only job: given a query vector, quickly return the most similar stored vectors.
+
+Imagine two vectors as points in space:
+
+                Vector B
+                   ●
+                  /
+                 /
+                /
+               ●
+          Vector A
+
+L2 distance asks:
+
+How far apart are these two vectors?
+
+Smaller distance means they're closer.
+
+FAISS is effectively doing:
+
+Question vector
+       │
+       ├── distance → Chunk 0
+       ├── distance → Chunk 1
+       ├── distance → Chunk 2
+       ├── distance → Chunk 3
+       └── distance → Chunk 4
+
+Then it returns the closest ones.
+
+
+## final flow
+
+DOCUMENT
+                    │
+                    ▼
+                 CHUNKS
+                    │
+                    ▼
+              EMBEDDING MODEL
+                    │
+                    ▼
+               384 numbers
+                    │
+                    ▼
+                FAISS
+             ┌─────────────┐
+             │ Vector 0    │
+             │ Vector 1    │
+             │ Vector 2    │
+             │ Vector 3    │
+             │ Vector 4    │
+             └─────────────┘
+                    ▲
+                    │
+              QUESTION
+                    │
+                    ▼
+              384 numbers
+                    │
+                    ▼
+              FAISS SEARCH
+                    │
+                    ▼
+             TOP 3 VECTORS
+                    │
+                    ▼
+              ACTUAL CHUNKS
