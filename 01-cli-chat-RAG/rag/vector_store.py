@@ -1,3 +1,5 @@
+# Builds a FAISS L2 vector index from embeddings for similarity search.
+
 import faiss
 import numpy as np
 

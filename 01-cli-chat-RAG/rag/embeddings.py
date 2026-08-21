@@ -1,3 +1,5 @@
+# Loads the sentence-transformer model and turns text into vector embeddings.
+
 from sentence_transformers import SentenceTransformer
 
 

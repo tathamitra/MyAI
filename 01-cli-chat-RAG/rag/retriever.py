@@ -1,3 +1,5 @@
+# Embeds a question and retrieves the most similar chunks from the FAISS index.
+
 import numpy as np
 
 

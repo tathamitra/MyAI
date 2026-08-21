@@ -1,3 +1,6 @@
+# Splits raw document text into overlapping word-based chunks for embedding.
+
+
 def chunk_text(text, chunk_size=20, overlap_words=10):
     words = text.split()
     chunks = []

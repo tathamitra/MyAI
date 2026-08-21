@@ -13,3 +13,28 @@ rag/
 
 utils/
    = "Things I use to test/check my application"
+
+                 ┌──────────────┐
+                 │   Document   │
+                 └──────┬───────┘
+                        ↓
+                   Chunking
+                        ↓
+                  Embeddings
+                        ↓
+                     FAISS
+                        ↑
+                        │
+Question ───────→ Embedding
+                        ↓
+                    Retrieval
+                        ↓
+                  Top 3 chunks
+                        ↓
+                Context Builder
+                        ↓
+                     Prompt
+                        ↓
+                      LLM
+                        ↓
+                     Answer

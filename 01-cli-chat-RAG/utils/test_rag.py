@@ -1,65 +1,21 @@
-import faiss
-import numpy as np
-
-from sentence_transformers import SentenceTransformer
-from utils.chunk_store import get_chunk
-from ai_client import ask_ai
+from document_reader import read_document
+from rag.rag_pipeline import build_index, ask_rag
+from rag.embeddings import model
 
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+document = read_document("docs/docker.md")
 
-index = faiss.read_index("docker.index")
-
+chunks, index = build_index(document)
 
 question = "How can I keep my Docker data after deleting a container?"
 
-
-question_embedding = model.encode([question])
-
-
-distances, indexes = index.search(
-    np.array(question_embedding).astype("float32"),
-    3
+answer = ask_rag(
+    question,
+    model,
+    index,
+    chunks,
+    top_k=3
 )
-
-
-retrieved_chunks = []
-
-for index_number in indexes[0]:
-    retrieved_chunks.append(get_chunk(index_number))
-
-
-context = "\n\n".join(retrieved_chunks)
-
-
-prompt = f"""
-You are a document question-answering assistant.
-
-Answer the question using ONLY the information in the context below.
-
-Do NOT use outside knowledge.
-
-If the answer is not contained in the context, reply exactly:
-
-"I could not find that information in the document."
-
-Context:
-
-{context}
-
-Question:
-
-{question}
-"""
-
-
-answer = ask_ai([
-    {
-        "role": "user",
-        "content": prompt
-    }
-])
-
 
 print("\nAnswer:")
 print(answer)
