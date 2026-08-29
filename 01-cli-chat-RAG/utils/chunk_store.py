@@ -1,10 +1,15 @@
-chunks = [
-    "Docker is a container platform.",
-    "Docker images are blueprints for containers.",
-    "Containers are running instances of images.",
-    "Volumes persist data.",
-    "Networks allow containers to communicate."
-]
+import json
 
-def get_chunk(index):
+
+def save_chunks(chunks, path):
+    with open(path, "w") as file:
+        json.dump(chunks, file, indent=2)
+
+
+def load_chunks(path):
+    with open(path, "r") as file:
+        return json.load(file)
+
+
+def get_chunk(chunks, index):
     return chunks[index]

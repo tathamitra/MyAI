@@ -1,5 +1,3 @@
-# Builds a FAISS L2 vector index from embeddings for similarity search.
-
 import faiss
 import numpy as np
 
@@ -14,3 +12,11 @@ def create_index(embeddings):
     )
 
     return index
+
+
+def save_index(index, path):
+    faiss.write_index(index, path)
+
+
+def load_index(path):
+    return faiss.read_index(path)
