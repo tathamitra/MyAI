@@ -1,7 +1,6 @@
 import json
 
 from groq import Groq
-
 from config import GROQ_API_KEY, MODEL_NAME
 
 
@@ -10,6 +9,16 @@ client = Groq(api_key=GROQ_API_KEY)
 
 def calculator(a, b):
     return a + b
+
+
+def multiply(a, b):
+    return a * b
+
+
+tool_functions = {
+    "calculator": calculator,
+    "multiply": multiply,
+}
 
 
 tools = [
@@ -27,30 +36,47 @@ tools = [
                 "required": ["a", "b"],
             },
         },
-    }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "multiply",
+            "description": "Multiply two numbers together.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "a": {"type": "number"},
+                    "b": {"type": "number"},
+                },
+                "required": ["a", "b"],
+            },
+        },
+    },
 ]
 
 
 messages = [
     {
         "role": "user",
-        "content": "What is 10 + 20?",
+        "content": "Add 10 and 20, then multiply the result by 5.",
     }
 ]
 
 
-# Step 1: Ask the LLM
-response = client.chat.completions.create(
-    model=MODEL_NAME,
-    messages=messages,
-    tools=tools,
-)
+# Agent loop
+while True:
 
-message = response.choices[0].message
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=messages,
+        tools=tools,
+    )
 
+    message = response.choices[0].message
 
-# Step 2: Check whether the LLM requested a tool
-if message.tool_calls:
+    if not message.tool_calls:
+        print("Final answer:", message.content)
+        break
 
     tool_call = message.tool_calls[0]
 
@@ -60,16 +86,15 @@ if message.tool_calls:
     print("LLM requested tool:", tool_name)
     print("Arguments:", arguments)
 
-    # Step 3: Execute the actual Python function
-    if tool_name == "calculator":
-        result = calculator(
-            arguments["a"],
-            arguments["b"],
-        )
+    tool_function = tool_functions[tool_name]
+
+    result = tool_function(
+        arguments["a"],
+        arguments["b"],
+    )
 
     print("Tool result:", result)
 
-    # Step 4: Send the tool result back to the LLM
     messages.append(message)
 
     messages.append(
@@ -79,12 +104,3 @@ if message.tool_calls:
             "content": str(result),
         }
     )
-
-    # Step 5: Ask the LLM for the final answer
-    final_response = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=messages,
-        tools=tools,
-    )
-
-    print("Final answer:", final_response.choices[0].message.content)
